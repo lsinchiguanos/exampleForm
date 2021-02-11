@@ -56,6 +56,7 @@ namespace Example
             dgvTablero.SelectionMode = DataGridViewSelectionMode.CellSelect;
             dgvTablero.MultiSelect = false;
             dgvTablero.Rows.OfType<DataGridViewRow>().ToList().ForEach(x => x.Height = 132);
+            dgvTablero.Columns.OfType<DataGridViewColumn>().ToList().ForEach(x => x.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter);
             dgvTablero.ColumnHeadersVisible = false;
             dgvTablero.RowHeadersVisible = false;
 
@@ -76,22 +77,10 @@ namespace Example
             Application.Exit();
         }
 
-        private void btnIniciar_Click(object sender, EventArgs e)
-        {
-            if (btnIniciar.Text.Equals("Inciar"))
-            {
-
-            }
-            else if (btnIniciar.Text.Equals("Nuevo"))
-            {
-                limpiarControles();
-                estableceCampo();
-                jugar();
-            }
-        }
-
         #region Configuraciones
         private void limpiarControles() { }
+
+
 
         #endregion
 
@@ -102,43 +91,77 @@ namespace Example
             }
         }
 
-        private bool validaGanador(String simbolo) {
+        private bool validaGanador(string simbolo) {
             bool _bandera = false;
-            if (dgvTablero[0, 0].Equals(simbolo) && dgvTablero[1, 1].Equals(simbolo) && dgvTablero[2, 2].Equals(simbolo))
+            try
             {
-                _bandera = true;
+                if (dgvTablero[0, 0].Value.Equals(simbolo) && dgvTablero[1, 1].Value.Equals(simbolo) && dgvTablero[2, 2].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[0, 2].Value.Equals(simbolo) && dgvTablero[1, 1].Value.Equals(simbolo) && dgvTablero[2, 0].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[0, 0].Value.Equals(simbolo) && dgvTablero[1, 0].Value.Equals(simbolo) && dgvTablero[2, 0].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[0, 1].Value.Equals(simbolo) && dgvTablero[1, 1].Value.Equals(simbolo) && dgvTablero[2, 1].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[0, 2].Value.Equals(simbolo) && dgvTablero[1, 2].Value.Equals(simbolo) && dgvTablero[2, 2].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[0, 0].Value.Equals(simbolo) && dgvTablero[0, 1].Value.Equals(simbolo) && dgvTablero[0, 2].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[1, 0].Value.Equals(simbolo) && dgvTablero[1, 1].Value.Equals(simbolo) && dgvTablero[1, 2].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
+                else if (dgvTablero[2, 0].Value.Equals(simbolo) && dgvTablero[2, 1].Value.Equals(simbolo) && dgvTablero[2, 2].Value.Equals(simbolo))
+                {
+                    _bandera = true;
+                }
             }
-            else if (dgvTablero[0, 2].Equals(simbolo) && dgvTablero[1, 1].Equals(simbolo) && dgvTablero[2, 0].Equals(simbolo))
+            catch (Exception)
             {
-                _bandera = true;
+                Console.WriteLine("Datos vacío");
             }
-            else if (dgvTablero[0, 0].Equals(simbolo) && dgvTablero[1, 0].Equals(simbolo) && dgvTablero[2, 0].Equals(simbolo))
-            {
-                _bandera = true;
-            }
-            else if (dgvTablero[0, 1].Equals(simbolo) && dgvTablero[1, 1].Equals(simbolo) && dgvTablero[2, 1].Equals(simbolo))
-            {
-                _bandera = true;
-            }
-            else if (dgvTablero[0, 2].Equals(simbolo) && dgvTablero[1, 2].Equals(simbolo) && dgvTablero[2, 2].Equals(simbolo))
-            {
-                _bandera = true;
-            }
-            else if (dgvTablero[0, 0].Equals(simbolo) && dgvTablero[0, 1].Equals(simbolo) && dgvTablero[0, 2].Equals(simbolo))
-            {
-                _bandera = true;
-            }
-            else if (dgvTablero[1, 0].Equals(simbolo) && dgvTablero[1, 1].Equals(simbolo) && dgvTablero[1, 2].Equals(simbolo))
-            {
-                _bandera = true;
-            }
-            else if (dgvTablero[2, 0].Equals(simbolo) && dgvTablero[2, 1].Equals(simbolo) && dgvTablero[2, 2].Equals(simbolo))
-            {
-                _bandera = true;
-            }
-
             return _bandera;
         }
 
+        private void compruebaEspacio(int fila, int columna, string simbolo) {
+            if (dgvTablero[columna, fila].Value is null)
+            {
+                dgvTablero[columna, fila].Value = simbolo;
+            }
+            else if (dgvTablero[columna, fila].Value.Equals("X") || dgvTablero[columna, fila].Value.Equals("O"))
+            {
+                Console.WriteLine("Escoja otro lugar");
+            }
+        }
+
+        private void dgvTablero_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            int fila = e.RowIndex;
+            int columna = e.ColumnIndex;
+            if (TurnoA == true)
+            {
+                compruebaEspacio(fila, columna, "X");
+                validaGanador("X");
+                TurnoA = false;
+            }
+            else
+            {
+                compruebaEspacio(fila, columna, "O");
+                validaGanador("O");
+                TurnoA = true;
+            }
+        }
     }
 }

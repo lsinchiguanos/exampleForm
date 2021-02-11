@@ -60,6 +60,7 @@
             this.dgvTablero.RowTemplate.Height = 24;
             this.dgvTablero.Size = new System.Drawing.Size(739, 491);
             this.dgvTablero.TabIndex = 0;
+            this.dgvTablero.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvTablero_CellMouseClick);
             // 
             // groupBox1
             // 
@@ -172,7 +173,6 @@
             this.btnIniciar.TabIndex = 1;
             this.btnIniciar.Text = "Iniciar";
             this.btnIniciar.UseVisualStyleBackColor = true;
-            this.btnIniciar.Click += new System.EventHandler(this.btnIniciar_Click);
             // 
             // btnVolver
             // 
@@ -191,7 +191,7 @@
             this.btnNuevo.Name = "btnNuevo";
             this.btnNuevo.Size = new System.Drawing.Size(246, 42);
             this.btnNuevo.TabIndex = 2;
-            this.btnNuevo.Text = "Nuevo";
+            this.btnNuevo.Text = "Cambio Turno";
             this.btnNuevo.UseVisualStyleBackColor = true;
             // 
             // TableroJuego
